@@ -1,24 +1,17 @@
 import socketserver
+import json
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
-    """
-    The request handler class for our server.
-
-    It is instantiated once per connection to the server, and must
-    override the handle() method to implement communication to the
-    client.
-    """
-
+  
     def handle(self):
-        # self.request is the TCP socket connected to the client
+        
         self.data = self.request.recv(1024).strip()
-        print("{} wrote:".format(self.client_address[0]))
-        print(self.data)
-        print(len(self.data))
-        strl=str(len(self.data))
-        # just send back the same data, but upper-cased
-        self.request.sendall(self.data.upper() + bytearray(b" changed data lenght = ") + bytes(strl, encoding = 'utf-8'))
-
+        mydata = json.dumps(str(self.data))
+        if 'multidispensing' in mydata:
+            self.request.sendall(bytes('{"result":"SUCESS"}',encoding = 'utf-8'))
+        else:
+            self.request.sendall(bytes('{"result":"ERROR"}',encoding = 'utf-8'))
+              
 if __name__ == "__main__":
     HOST, PORT = "localhost", 9999
 
