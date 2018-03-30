@@ -2,9 +2,7 @@ import socketserver
 import json
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
-  
     def handle(self):
-        
         self.data = self.request.recv(1024).strip()
         mydata = json.dumps(str(self.data))
         if 'multidispensing' in mydata:
